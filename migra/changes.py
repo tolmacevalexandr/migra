@@ -201,12 +201,13 @@ def get_selectable_changes(
     enums_from,
     enums_target,
     add_dependents_for_modified=True,
+    exclude_func=False,
 ):
     tables_from = od((k, v) for k, v in selectables_from.items() if v.is_table)
     tables_target = od((k, v) for k, v in selectables_target.items() if v.is_table)
 
-    other_from = od((k, v) for k, v in selectables_from.items() if not v.is_table)
-    other_target = od((k, v) for k, v in selectables_target.items() if not v.is_table)
+    other_from   = od((k, v) for k, v in selectables_from  .items() if not v.is_table and not(v.relationtype == "f" and exclude_func))
+    other_target = od((k, v) for k, v in selectables_target.items() if not v.is_table and not(v.relationtype == "f" and exclude_func))
 
     added_tables, removed_tables, modified_tables, unmodified_tables = differences(
         tables_from, tables_target

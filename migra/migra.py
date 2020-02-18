@@ -1,8 +1,7 @@
 from __future__ import unicode_literals
 
-from sqlbag import raw_execute
-
 from schemainspect import DBInspector, get_inspector
+from sqlbag import raw_execute
 
 from .changes import Changes
 from .statements import Statements
@@ -62,7 +61,7 @@ class Migration(object):
         if drops:
             self.add(self.changes.extensions(drops_only=True))
 
-    def add_all_changes(self, privileges=False):
+    def add_all_changes(self, privileges=False, exclude_func=False):
         self.add(self.changes.schemas(creations_only=True))
 
         self.add(self.changes.extensions(creations_only=True))
@@ -77,7 +76,7 @@ class Migration(object):
         self.add(self.changes.pk_constraints(drops_only=True))
         self.add(self.changes.indexes(drops_only=True))
 
-        self.add(self.changes.selectables())
+        self.add(self.changes.selectables(exclude_func=exclude_func))
 
         self.add(self.changes.sequences(drops_only=True))
         self.add(self.changes.enums(drops_only=True, modifications=False))

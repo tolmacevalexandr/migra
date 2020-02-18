@@ -42,6 +42,13 @@ def parse_args(args):
         help='Only output "create extension..." statements, nothing else.',
     )
     parser.add_argument(
+        "--exclude-func",
+        dest="exclude_func",
+        action="store_true",
+        default=False,
+        help='Exclude statements for "create function...".',
+    )
+    parser.add_argument(
         "--with-privileges",
         dest="with_privileges",
         action="store_true",
@@ -75,7 +82,7 @@ def run(args, out=None, err=None):
         if args.create_extensions_only:
             m.add_extension_changes(drops=False)
         else:
-            m.add_all_changes(privileges=args.with_privileges)
+            m.add_all_changes(privileges=args.with_privileges, exclude_func=args.exclude_func)
         try:
             if m.statements:
                 if args.force_utf8:
